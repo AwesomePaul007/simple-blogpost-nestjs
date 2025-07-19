@@ -3,10 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Post {
+export class PostEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,4 +22,7 @@ export class Post {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

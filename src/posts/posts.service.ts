@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostInterface } from './interfaces/post.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from './entities/post.entity';
+import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(PostEntity)
+    private postRepository: Repository<PostEntity>,
   ) {}
 
   private posts: PostInterface[] = [
@@ -22,12 +23,12 @@ export class PostsService {
   ];
 
   // findAll(): PostInterface[] {
-  async findAll(): Promise<Post[]> {
+  async findAll(): Promise<PostEntity[]> {
     return this.postRepository.find();
   }
 
   // findOne(id: number): PostInterface {
-  async findOne(id: number): Promise<Post> {
+  async findOne(id: number): Promise<PostEntity> {
     const post = await this.postRepository.findOneBy({ id });
 
     if (!post) throw new NotFoundException(`Post with ID ${id} is not found`);
@@ -35,9 +36,9 @@ export class PostsService {
   }
 
   // creaePost(postData: Omit<PostInterface, 'id' | 'createdAt'>): PostInterface {
-  async creaePost(
+  async create(
     postData: Omit<PostInterface, 'id' | 'createdAt'>,
-  ): Promise<Post> {
+  ): Promise<PostEntity> {
     // const newPost: PostInterface = {
     // id: this.getNextPostId(),
     // createdAt: new Date(),
@@ -59,7 +60,7 @@ export class PostsService {
     id: number,
     // postUpdate: Partial<Omit<PostInterface, 'id' | 'createdAt'>>,
     postUpdate: UpdatePostDto,
-  ): Promise<Post> {
+  ): Promise<PostEntity> {
     // const currentPostIndex = this.posts.findIndex((post) => post.id === id);
     // // console.log('CCC', currentPostIndex)
     // if (currentPostIndex < 0)

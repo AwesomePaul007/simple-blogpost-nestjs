@@ -19,7 +19,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostExistsPipe } from './pipes/post-exists.pipe';
-import { Post as PostEntity } from './entities/post.entity';
+import { PostEntity } from './entities/post.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -75,7 +75,7 @@ export class PostsController {
   // )
   // createPost(@Body() postData: CreatePostDto): PostInterface {
   async createPost(@Body() postData: CreatePostDto): Promise<PostEntity> {
-    return this.postService.creaePost(postData);
+    return this.postService.create(postData);
   }
 
   @Put(':id')
@@ -91,6 +91,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(
     @Param('id', ParseIntPipe, PostExistsPipe) id: number,
   ): Promise<void> {
