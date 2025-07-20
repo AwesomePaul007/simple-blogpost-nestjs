@@ -2,11 +2,12 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserRegisterDTO } from './dto/user-register.dto';
 import { UserLoginDTO } from './dto/user-login.dto';
-import { JWTAuthGuard } from './guards/jwt-auth.guards';
+import { JWTAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { Roles } from './decorators/role.decorator';
 import { UserRole } from './entities/user-entity';
-import { RolesGuard } from './guards/roles.guards';
+import { RolesGuard } from './guards/roles.guard';
+import { LoginThrottlerGuard } from './guards/login-throttler.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -18,11 +19,13 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseGuards(LoginThrottlerGuard)
   async login(@Body() userLoginReq: UserLoginDTO) {
     return this.authService.login(userLoginReq);
   }
 
-  @Post('login')
+  @Post('refresh')
+  @UseGuards(LoginThrottlerGuard)
   async refreshToken(@Body('refreshToken') refreshToken: string) {
     return this.authService.refreshToken(refreshToken);
   }

@@ -21,7 +21,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostExistsPipe } from './pipes/post-exists.pipe';
 import { PostEntity } from './entities/post.entity';
-import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guards';
+import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserEntity, UserRole } from 'src/auth/entities/user-entity';
 import { Roles } from 'src/auth/decorators/role.decorator';

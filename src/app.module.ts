@@ -7,6 +7,7 @@ import { PostEntity } from './posts/entities/post.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './auth/entities/user-entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 // import { ConfigService } from '@nestjs/config';
 // console.log('Loading environment variables...', ConfigService.get);
 // const {
@@ -23,6 +24,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 5,
+      },
+    ]),
     // NOTE: Initially used static configuration, but now using ConfigService for dynamic loading
     // TypeOrmModule.forRoot({
     //   type: DATABASE_TYPE as 'mysql' | 'postgres' | 'sqlite',
