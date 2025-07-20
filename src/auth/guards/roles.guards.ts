@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '../entities/user-entity';
 import { ConfigService } from '@nestjs/config';
+import { ROLES_KEY } from '../decorators/role.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -18,7 +19,7 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     // Get the roles required for the route
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
-      this.configService.get<string>('ROLES_KEY'),
+      ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
 
@@ -35,6 +36,7 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<RequestWithUser>();
     const { user } = request;
+    console.log('Current User:', user);
 
     if (!user || !user.role) {
       throw new ForbiddenException('Access denied: User not authenticated');

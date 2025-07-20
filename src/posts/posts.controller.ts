@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
   // Query,
   // UsePipes,
   // ValidationPipe,
@@ -20,6 +21,10 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostExistsPipe } from './pipes/post-exists.pipe';
 import { PostEntity } from './entities/post.entity';
+import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guards';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserEntity, UserRole } from 'src/auth/entities/user-entity';
+import { Roles } from 'src/auth/decorators/role.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -62,6 +67,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JWTAuthGuard)
   // createPost(
   //   @Body() postData: Omit<PostInterface, 'id' | 'createdAt'>,
   // ): PostInterface {
@@ -74,11 +80,15 @@ export class PostsController {
   //   }),
   // )
   // createPost(@Body() postData: CreatePostDto): PostInterface {
-  async createPost(@Body() postData: CreatePostDto): Promise<PostEntity> {
-    return this.postService.create(postData);
+  async createPost(
+    @Body() postData: CreatePostDto,
+    @CurrentUser() user: UserEntity,
+  ): Promise<PostEntity> {
+    return this.postService.create(postData, user);
   }
 
   @Put(':id')
+  @UseGuards(JWTAuthGuard)
   // updatePost(
   //   @Param('id', ParseIntPipe) id: number,
   //   @Body() updateData: Partial<Omit<PostInterface, 'id' | 'createdAt'>>,
@@ -86,12 +96,15 @@ export class PostsController {
   updatePost(
     @Param('id', ParseIntPipe, PostExistsPipe) id: number,
     @Body() updateData: UpdatePostDto,
+    @CurrentUser() user: UserEntity,
   ): Promise<PostEntity> {
-    return this.postService.updatePost(id, updateData);
+    return this.postService.updatePost(id, updateData, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Roles(UserRole.ADMIN)
+  @UseGuards(JWTAuthGuard)
   async deletePost(
     @Param('id', ParseIntPipe, PostExistsPipe) id: number,
   ): Promise<void> {
