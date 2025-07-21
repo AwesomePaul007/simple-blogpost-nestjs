@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './auth/entities/user-entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
 // import { ConfigService } from '@nestjs/config';
 // console.log('Loading environment variables...', ConfigService.get);
 // const {
@@ -31,6 +32,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 5,
       },
     ]),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60000, // 1 minute
+      max: 100, // Maximum number of items in cache
+    }),
     // NOTE: Initially used static configuration, but now using ConfigService for dynamic loading
     // TypeOrmModule.forRoot({
     //   type: DATABASE_TYPE as 'mysql' | 'postgres' | 'sqlite',

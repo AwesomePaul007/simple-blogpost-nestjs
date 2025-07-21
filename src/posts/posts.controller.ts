@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
   // Query,
   // UsePipes,
@@ -25,6 +26,8 @@ import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserEntity, UserRole } from 'src/auth/entities/user-entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
+import { FindPostsQueryDTO } from './dto/find-posts-query.dto';
+import { PaginatedResponse } from 'src/common/interfaces/paginated-response-interfaces';
 
 @Controller('posts')
 export class PostsController {
@@ -41,8 +44,10 @@ export class PostsController {
   //   }
   //   return allPosts;
   // }
-  async findAll(): Promise<PostEntity[]> {
-    return this.postService.findAll();
+  async findAll(
+    @Query() query: FindPostsQueryDTO,
+  ): Promise<PaginatedResponse<PostEntity>> {
+    return this.postService.findAll(query);
   }
 
   @Get(':id')
@@ -93,7 +98,7 @@ export class PostsController {
   //   @Param('id', ParseIntPipe) id: number,
   //   @Body() updateData: Partial<Omit<PostInterface, 'id' | 'createdAt'>>,
   // ): PostInterface {
-  updatePost(
+  async updatePost(
     @Param('id', ParseIntPipe, PostExistsPipe) id: number,
     @Body() updateData: UpdatePostDto,
     @CurrentUser() user: UserEntity,
