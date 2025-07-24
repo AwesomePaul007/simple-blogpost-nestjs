@@ -10,6 +10,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
 // import { ConfigService } from '@nestjs/config';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { FileEntity } from './file-upload/entities/file.entity';
+
 // console.log('Loading environment variables...', ConfigService.get);
 // const {
 //   DATABASE_TYPE,
@@ -61,13 +64,14 @@ import { CacheModule } from '@nestjs/cache-manager';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [PostEntity, UserEntity],
+        entities: [PostEntity, UserEntity, FileEntity],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     PostsModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
