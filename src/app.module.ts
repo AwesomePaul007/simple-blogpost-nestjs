@@ -12,6 +12,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 // import { ConfigService } from '@nestjs/config';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { FileEntity } from './file-upload/entities/file.entity';
+import { EventsModule } from './events/events.module';
 
 // console.log('Loading environment variables...', ConfigService.get);
 // const {
@@ -72,6 +73,7 @@ import { FileEntity } from './file-upload/entities/file.entity';
     AuthModule,
     PostsModule,
     FileUploadModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

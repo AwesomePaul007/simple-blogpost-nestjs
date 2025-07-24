@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { UserEventsService } from 'src/events/user-events.services';
 
 // const {
 //   JWT_SECRET,
@@ -32,6 +33,7 @@ export class AuthService {
     private userRespository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userEventService: UserEventsService,
   ) {
     this.JWT_SECRET = this.configService.get<string>('JWT_SECRET')!;
     this.JWT_REFRESH_SECRET =
@@ -64,6 +66,10 @@ export class AuthService {
     };
 
     const userResp = await this.userRespository.save(newUser);
+
+    // Emit the user registered event
+    // for sending emails and other notifications
+    this.userEventService.emitUserEvent(userResp);
 
     const { password, ...userResult } = userResp;
     return {
